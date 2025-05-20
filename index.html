@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simple Multi-language Dictionary</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 400px; margin: 40px auto; }
+        label, select, input, button { margin: 10px 0; display: block; width: 100%; }
+        #meaning { margin-top: 20px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h2>Dictionary</h2>
+    <label for="word">Enter Word:</label>
+    <input type="text" id="word" placeholder="Type a word...">
+
+    <label for="language">Select Language:</label>
+    <select id="language">
+        <option value="en">English</option>
+        <option value="es">Spanish</option>
+        <option value="fr">French</option>
+        <option value="de">German</option>
+        <!-- Add more languages as needed -->
+    </select>
+
+    <button onclick="getMeaning()">Get Meaning</button>
+
+    <div id="meaning"></div>
+
+    <script>
+        // Example dictionary data. Add more words/languages as needed.
+        const dictionary = {
+            "hello": {
+                "en": "A greeting or expression of goodwill.",
+                "es": "Un saludo o expresión de buena voluntad.",
+                "fr": "Une salutation ou une expression de bonne volonté.",
+                "de": "Eine Begrüßung oder ein Ausdruck des guten Willens."
+            },
+            "world": {
+                "en": "The earth, together with all of its countries and peoples.",
+                "es": "La tierra, junto con todos sus países y pueblos.",
+                "fr": "La terre, avec tous ses pays et peuples.",
+                "de": "Die Erde mit all ihren Ländern und Völkern."
+            },
+            "book": {
+                "en": "A written or printed work consisting of pages glued or sewn together.",
+                "es": "Una obra escrita o impresa compuesta de páginas unidas.",
+                "fr": "Un ouvrage écrit ou imprimé composé de pages reliées.",
+                "de": "Ein geschriebenes oder gedrucktes Werk aus zusammengefügten Seiten."
+            }
+        };
+
+        function getMeaning() {
+            const word = document.getElementById('word').value.trim().toLowerCase();
+            const language = document.getElementById('language').value;
+            const meaningDiv = document.getElementById('meaning');
+
+            if (dictionary[word] && dictionary[word][language]) {
+                meaningDiv.textContent = dictionary[word][language];
+            } else {
+                meaningDiv.textContent = "Meaning not found for this word/language.";
+            }
+        }
+    </script>
+</body>
+</html>
