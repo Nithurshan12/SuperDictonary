@@ -2,64 +2,258 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Simple Multi-language Dictionary</title>
+    <title>SuperDictonary - Multilingual</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        body { font-family: Arial, sans-serif; max-width: 400px; margin: 40px auto; }
-        label, select, input, button { margin: 10px 0; display: block; width: 100%; }
-        #meaning { margin-top: 20px; font-weight: bold; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f6fb; margin: 0; padding: 0;}
+        header { background: #2d89ef; color: #fff; padding: 1.5rem 0; text-align: center;}
+        .container { max-width: 500px; margin: 2rem auto; background: #fff; box-shadow: 0 2px 12px rgba(0,0,0,0.08); border-radius: 10px; padding: 2rem;}
+        h2 { margin-bottom: 1.5rem; color: #2d89ef;}
+        .search-box { display: flex; flex-direction: column; gap: 0.7rem; margin-bottom: 1.5rem;}
+        .search-row { display: flex; gap: 0.5rem; }
+        .search-box input[type="text"], .search-box select { flex: 1; padding: 0.7rem; font-size: 1rem; border: 1px solid #dbeafe; border-radius: 6px;}
+        .search-box button { background: #2d89ef; color: #fff; border: none; padding: 0.7rem 1.2rem; font-size: 1rem; border-radius: 6px; cursor: pointer; transition: background 0.2s;}
+        .search-box button:hover { background: #1b5cb8;}
+        .result { margin-top: 1.5rem; padding: 1rem; background: #f1f5ff; border-radius: 6px; min-height: 60px;}
+        .word { font-weight: bold; font-size: 1.2rem;}
+        .definition { margin-top: 0.5rem; font-size: 1.05rem;}
+        .error { color: #e74c3c; font-weight: bold;}
+        .lang-label { font-weight: bold; margin-right: 0.5rem; }
+        @media (max-width: 600px) {.container { margin: 1rem; padding: 1rem;}}
     </style>
 </head>
 <body>
-    <h2>Dictionary</h2>
-    <label for="word">Enter Word:</label>
-    <input type="text" id="word" placeholder="Type a word...">
-
-    <label for="language">Select Language:</label>
-    <select id="language">
-        <option value="en">English</option>
-        <option value="es">Spanish</option>
-        <option value="fr">French</option>
-        <option value="de">German</option>
-        <!-- Add more languages as needed -->
-    </select>
-
-    <button onclick="getMeaning()">Get Meaning</button>
-
-    <div id="meaning"></div>
-
+    <header>
+        <h1>SuperDictonary</h1>
+        <p>The Greatest Multilingual Dictionary</p>
+    </header>
+    <div class="container">
+        <h2>Search for a Word</h2>
+        <form class="search-box" id="dictForm">
+            <div class="search-row">
+                <input type="text" id="wordInput" placeholder="Enter a word..." required autocomplete="off">
+                <select id="langSelect">
+                    <option value="en" selected>English</option>
+                    <option value="es">Spanish (Español)</option>
+                    <option value="fr">French (Français)</option>
+                    <option value="hi">Hindi (हिन्दी)</option>
+                    <option value="de">German (Deutsch)</option>
+                    <option value="it">Italian (Italiano)</option>
+                    <option value="ko">Korean (한국어)</option>
+                    <option value="pt-BR">Portuguese (Português - Brasil)</option>
+                    <option value="ru">Russian (Русский)</option>
+                    <option value="tr">Turkish (Türkçe)</option>
+                </select>
+                <button type="submit">Search</button>
+            </div>
+        </form>
+        <div class="result" id="result"></div>
+        <h2 style="margin-top:2.5rem;">Sample Words in Different Languages</h2>
+        <div id="sampleWords"></div>
+    </div>
     <script>
-        // Example dictionary data. Add more words/languages as needed.
-        const dictionary = {
-            "hello": {
-                "en": "A greeting or expression of goodwill.",
-                "es": "Un saludo o expresión de buena voluntad.",
-                "fr": "Une salutation ou une expression de bonne volonté.",
-                "de": "Eine Begrüßung oder ein Ausdruck des guten Willens."
-            },
-            "world": {
-                "en": "The earth, together with all of its countries and peoples.",
-                "es": "La tierra, junto con todos sus países y pueblos.",
-                "fr": "La terre, avec tous ses pays et peuples.",
-                "de": "Die Erde mit all ihren Ländern und Völkern."
-            },
-            "book": {
-                "en": "A written or printed work consisting of pages glued or sewn together.",
-                "es": "Una obra escrita o impresa compuesta de páginas unidas.",
-                "fr": "Un ouvrage écrit ou imprimé composé de pages reliées.",
-                "de": "Ein geschriebenes oder gedrucktes Werk aus zusammengefügten Seiten."
-            }
+        // 10 words per language, 100 total, each with definitions in the selected language
+        // Available: en, es, fr, hi, de, it, ko, pt-BR, ru, tr
+
+        const sampleDictionary = {
+            "en": [
+                {word:"abandon", def:"To leave behind or give up completely."},
+                {word:"ability", def:"The power or skill to do something."},
+                {word:"ancient", def:"Belonging to the very distant past."},
+                {word:"benefit", def:"An advantage or profit gained from something."},
+                {word:"challenge", def:"A task or situation that tests someone's abilities."},
+                {word:"delicate", def:"Easily broken or damaged."},
+                {word:"efficient", def:"Achieving maximum productivity with minimum wasted effort."},
+                {word:"frequent", def:"Occurring or done on many occasions."},
+                {word:"genuine", def:"Truly what something is said to be."},
+                {word:"honor", def:"High respect; great esteem."}
+            ],
+            "es": [
+                {word:"abandonar", def:"Dejar atrás o renunciar completamente."},
+                {word:"habilidad", def:"La capacidad o destreza para hacer algo."},
+                {word:"antiguo", def:"Que pertenece a un pasado muy lejano."},
+                {word:"beneficio", def:"Ventaja o ganancia obtenida de algo."},
+                {word:"desafío", def:"Situación que pone a prueba las habilidades de alguien."},
+                {word:"delicado", def:"Que se rompe o daña fácilmente."},
+                {word:"eficiente", def:"Que logra el máximo rendimiento con el mínimo esfuerzo."},
+                {word:"frecuente", def:"Que ocurre o se hace en muchas ocasiones."},
+                {word:"auténtico", def:"Que es realmente lo que parece o se dice que es."},
+                {word:"honor", def:"Gran respeto o estima."}
+            ],
+            "fr": [
+                {word:"abandonner", def:"Laisser derrière soi ou renoncer complètement."},
+                {word:"capacité", def:"Le pouvoir ou la compétence de faire quelque chose."},
+                {word:"ancien", def:"Qui appartient à un passé très lointain."},
+                {word:"bénéfice", def:"Avantage ou profit tiré de quelque chose."},
+                {word:"défi", def:"Situation qui met à l'épreuve les capacités de quelqu'un."},
+                {word:"délicat", def:"Qui se casse ou s’abîme facilement."},
+                {word:"efficace", def:"Qui atteint le meilleur résultat avec le moins d’effort."},
+                {word:"fréquent", def:"Qui arrive ou se fait à de nombreuses occasions."},
+                {word:"authentique", def:"Qui est vraiment ce qu'il semble être."},
+                {word:"honneur", def:"Grand respect ou estime."}
+            ],
+            "hi": [
+                {word:"त्यागना", def:"पूरी तरह से छोड़ देना या छोड़ देना।"},
+                {word:"क्षमता", def:"कुछ करने की शक्ति या कौशल।"},
+                {word:"प्राचीन", def:"बहुत प्राचीन काल का।"},
+                {word:"लाभ", def:"किसी चीज़ से प्राप्त होने वाला फायदा या लाभ।"},
+                {word:"चुनौती", def:"कोई कार्य या परिस्थिति जो किसी की क्षमताओं की परीक्षा लेती है।"},
+                {word:"नाज़ुक", def:"जो आसानी से टूट या क्षतिग्रस्त हो जाए।"},
+                {word:"कुशल", def:"कम प्रयास में अधिक उत्पादकता प्राप्त करना।"},
+                {word:"अक्सर", def:"जो कई बार होता या किया जाता है।"},
+                {word:"वास्तविक", def:"जो वास्तव में वैसा ही है जैसा कहा गया है।"},
+                {word:"सम्मान", def:"उच्च सम्मान या प्रतिष्ठा।"}
+            ],
+            "de": [
+                {word:"aufgeben", def:"Etwas vollständig zurücklassen oder aufhören."},
+                {word:"Fähigkeit", def:"Die Kraft oder das Können, etwas zu tun."},
+                {word:"alt", def:"Aus einer sehr fernen Vergangenheit stammend."},
+                {word:"Vorteil", def:"Ein Nutzen oder Gewinn, der aus etwas gezogen wird."},
+                {word:"Herausforderung", def:"Eine Aufgabe oder Situation, die jemanden testet."},
+                {word:"empfindlich", def:"Leicht zerbrechlich oder beschädigbar."},
+                {word:"effizient", def:"Mit minimalem Aufwand maximale Produktivität erreichen."},
+                {word:"häufig", def:"Oft vorkommend oder ausgeführt."},
+                {word:"echt", def:"Tatsächlich das, was behauptet wird."},
+                {word:"Ehre", def:"Großer Respekt oder Ansehen."}
+            ],
+            "it": [
+                {word:"abbandonare", def:"Lasciare completamente o rinunciare a qualcosa."},
+                {word:"abilità", def:"Il potere o la capacità di fare qualcosa."},
+                {word:"antico", def:"Appartenente a un passato molto lontano."},
+                {word:"beneficio", def:"Vantaggio o profitto tratto da qualcosa."},
+                {word:"sfida", def:"Situazione che mette alla prova le capacità di qualcuno."},
+                {word:"delicato", def:"Che si rompe o si danneggia facilmente."},
+                {word:"efficiente", def:"Raggiunge la massima produttività con il minimo sforzo."},
+                {word:"frequente", def:"Che si verifica o si fa in molte occasioni."},
+                {word:"autentico", def:"Che è veramente ciò che sembra."},
+                {word:"onore", def:"Grande rispetto o stima."}
+            ],
+            "ko": [
+                {word:"포기하다", def:"완전히 버리거나 떠나다."},
+                {word:"능력", def:"무언가를 할 수 있는 힘이나 기술."},
+                {word:"고대의", def:"매우 먼 과거에 속하는."},
+                {word:"이익", def:"무언가에서 얻는 이점이나 이익."},
+                {word:"도전", def:"누군가의 능력을 시험하는 상황이나 과제."},
+                {word:"섬세한", def:"쉽게 부서지거나 손상되는."},
+                {word:"효율적인", def:"최소한의 노력으로 최대 생산성을 달성하는."},
+                {word:"빈번한", def:"많은 경우에 발생하거나 행해지는."},
+                {word:"진짜의", def:"진정으로 그렇다고 말하는 것."},
+                {word:"명예", def:"높은 존경이나 명성."}
+            ],
+            "pt-BR": [
+                {word:"abandonar", def:"Deixar para trás ou desistir completamente."},
+                {word:"habilidade", def:"O poder ou habilidade de fazer algo."},
+                {word:"antigo", def:"Pertencente a um passado muito distante."},
+                {word:"benefício", def:"Vantagem ou lucro obtido de algo."},
+                {word:"desafio", def:"Situação que testa as habilidades de alguém."},
+                {word:"delicado", def:"Que se quebra ou se danifica facilmente."},
+                {word:"eficiente", def:"Que alcança a máxima produtividade com mínimo esforço."},
+                {word:"frequente", def:"Que ocorre ou é feito em muitas ocasiões."},
+                {word:"genuíno", def:"Que é realmente o que se diz ser."},
+                {word:"honra", def:"Grande respeito ou estima."}
+            ],
+            "ru": [
+                {word:"бросать", def:"Полностью оставить или отказаться от чего-либо."},
+                {word:"способность", def:"Сила или умение делать что-либо."},
+                {word:"древний", def:"Относящийся к очень далёкому прошлому."},
+                {word:"выгода", def:"Преимущество или прибыль, полученная от чего-либо."},
+                {word:"вызов", def:"Задача или ситуация, проверяющая чьи-либо способности."},
+                {word:"деликатный", def:"Легко ломающийся или повреждающийся."},
+                {word:"эффективный", def:"Достигающий максимальной производительности при минимальных затратах."},
+                {word:"частый", def:"Происходящий или совершаемый много раз."},
+                {word:"настоящий", def:"Действительно то, чем является."},
+                {word:"честь", def:"Высокое уважение или почёт."}
+            ],
+            "tr": [
+                {word:"terk etmek", def:"Tamamen bırakmak veya vazgeçmek."},
+                {word:"yetenek", def:"Bir şeyi yapma gücü veya becerisi."},
+                {word:"eski", def:"Çok uzak geçmişe ait olan."},
+                {word:"fayda", def:"Bir şeyden elde edilen avantaj veya kazanç."},
+                {word:"meydan okuma", def:"Birinin yeteneklerini sınayan durum veya görev."},
+                {word:"nazik", def:"Kolayca kırılan veya zarar gören."},
+                {word:"verimli", def:"Minimum çabayla maksimum verimlilik sağlayan."},
+                {word:"sık", def:"Birçok kez olan veya yapılan."},
+                {word:"gerçek", def:"Gerçekten olduğu söylenen şey."},
+                {word:"onur", def:"Yüksek saygı veya değer."}
+            ]
         };
 
-        function getMeaning() {
-            const word = document.getElementById('word').value.trim().toLowerCase();
-            const language = document.getElementById('language').value;
-            const meaningDiv = document.getElementById('meaning');
+        const form = document.getElementById('dictForm');
+        const input = document.getElementById('wordInput');
+        const resultDiv = document.getElementById('result');
+        const langSelect = document.getElementById('langSelect');
+        const sampleWordsDiv = document.getElementById('sampleWords');
 
-            if (dictionary[word] && dictionary[word][language]) {
-                meaningDiv.textContent = dictionary[word][language];
-            } else {
-                meaningDiv.textContent = "Meaning not found for this word/language.";
+        // Display the sample dictionary words in each language
+        function renderSampleWords() {
+            let html = "";
+            Object.keys(sampleDictionary).forEach(lang => {
+                let langName = langSelect.querySelector(`option[value="${lang}"]`)?.textContent || lang;
+                html += `<h3>${langName}</h3><ul>`;
+                sampleDictionary[lang].forEach(entry => {
+                    html += `<li><span class="word">${entry.word}:</span> <span class="definition">${entry.def}</span></li>`;
+                });
+                html += "</ul>";
+            });
+            sampleWordsDiv.innerHTML = html;
+        }
+        renderSampleWords();
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const word = input.value.trim().toLowerCase();
+            const language = langSelect.value;
+            if (!word) {
+                showError('Please enter a word.');
+                return;
             }
+            // Check local dictionary first
+            const localDef = sampleDictionary[language]?.find(w => w.word.toLowerCase() === word);
+            if (localDef) {
+                showLocalDefinition(localDef);
+            } else {
+                searchWord(word, language);
+            }
+        });
+
+        function showError(msg) {
+            resultDiv.innerHTML = `<span class="error">${msg}</span>`;
+        }
+
+        function showLocalDefinition(entry) {
+            resultDiv.innerHTML = `
+                <div class="word">${entry.word.charAt(0).toUpperCase() + entry.word.slice(1)}</div>
+                <div class="definition">${entry.def}</div>
+            `;
+        }
+
+        function searchWord(word, language) {
+            resultDiv.innerHTML = 'Searching...';
+            fetch(`https://api.dictionaryapi.dev/api/v2/entries/${language}/${encodeURIComponent(word)}`)
+                .then(response => {
+                    if (!response.ok) throw new Error('Word not found.');
+                    return response.json();
+                })
+                .then(data => {
+                    const entry = data[0];
+                    const meanings = entry.meanings;
+                    let definitionsHtml = '';
+                    meanings.forEach(meaning => {
+                        meaning.definitions.forEach(def => {
+                            definitionsHtml += `<div class="definition"><span style="color:#2d89ef;">${meaning.partOfSpeech}:</span> ${def.definition}</div>`;
+                            if (def.example) {
+                                definitionsHtml += `<div style="margin-left:1em;color:#555;font-style:italic;">Example: ${def.example}</div>`;
+                            }
+                        });
+                    });
+                    resultDiv.innerHTML = `
+                        <div class="word">${entry.word}</div>
+                        ${definitionsHtml}
+                    `;
+                })
+                .catch(err => {
+                    showError('Sorry, definition not found in the selected language.');
+                });
         }
     </script>
 </body>
