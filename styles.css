@@ -1,0 +1,245 @@
+/* SuperDictonary - Epic Modern CSS */
+/* This stylesheet delivers a bold, engaging, and highly polished UI. */
+/* Customize colors, fonts, and layout as needed for your app structure. */
+
+:root {
+  --primary: #612fff;
+  --secondary: #f9f9f9;
+  --accent: #ffb347;
+  --success: #62e884;
+  --danger: #ff5858;
+  --text-main: #22223b;
+  --text-light: #fff;
+  --shadow: 0 4px 24px 0 rgba(97, 47, 255, 0.15);
+  --radius: 16px;
+  --transition: 0.25s cubic-bezier(.4,0,.2,1);
+  --font-main: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  --gradient: linear-gradient(90deg, #612fff 0%, #ffb347 100%);
+}
+
+body {
+  background: var(--secondary);
+  color: var(--text-main);
+  font-family: var(--font-main);
+  margin: 0;
+  min-height: 100vh;
+  position: relative;
+}
+
+header {
+  background: var(--gradient);
+  color: var(--text-light);
+  padding: 2rem 0 1.5rem 0;
+  text-align: center;
+  box-shadow: var(--shadow);
+  border-bottom-left-radius: var(--radius);
+  border-bottom-right-radius: var(--radius);
+}
+
+header h1 {
+  font-size: 2.75rem;
+  margin: 0;
+  letter-spacing: 0.03em;
+  font-weight: 800;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+main {
+  max-width: 720px;
+  margin: 2.5rem auto 0 auto;
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 2.5rem 2rem;
+  min-height: 60vh;
+  animation: fadein 1.2s;
+}
+
+@keyframes fadein {
+  from { opacity: 0; transform: translateY(20px);}
+  to { opacity: 1; transform: translateY(0);}
+}
+
+input[type="text"],
+input[type="search"],
+textarea {
+  width: 100%;
+  padding: 0.9rem 1.1rem;
+  margin: 1rem 0;
+  border: 2px solid var(--primary);
+  border-radius: var(--radius);
+  font-size: 1.05rem;
+  background: #f6f6ff;
+  transition: border-color var(--transition), box-shadow var(--transition);
+  box-sizing: border-box;
+}
+
+input:focus,
+textarea:focus {
+  border-color: var(--accent);
+  outline: none;
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+button {
+  padding: 0.8rem 2.2rem;
+  background: var(--primary);
+  color: var(--text-light);
+  border: none;
+  border-radius: var(--radius);
+  font-size: 1.1rem;
+  font-weight: 600;
+  transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+  cursor: pointer;
+  box-shadow: 0 2px 8px 0 rgba(97, 47, 255, 0.08);
+  margin: 0.4rem 0;
+}
+
+button:hover, button:focus {
+  background: var(--accent);
+  color: var(--text-main);
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 6px 20px 0 rgba(255, 179, 71, 0.15);
+}
+
+.card {
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.6rem 1.2rem;
+  margin-bottom: 1.8rem;
+  transition: box-shadow var(--transition), transform var(--transition);
+}
+
+.card:hover {
+  box-shadow: 0 8px 28px 0 rgba(97, 47, 255, 0.18);
+  transform: translateY(-3px) scale(1.02);
+}
+
+.word-title {
+  font-size: 2.1rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.01em;
+}
+
+.word-definition {
+  font-size: 1.16rem;
+  color: #444;
+  margin-bottom: 0.6rem;
+  line-height: 1.5;
+}
+
+.tag {
+  display: inline-block;
+  background: var(--accent);
+  color: var(--text-main);
+  padding: 0.3em 0.9em;
+  border-radius: 999px;
+  font-size: 0.96em;
+  margin-right: 0.7em;
+  margin-bottom: 0.18em;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.success {
+  background: var(--success);
+  color: #14532d;
+}
+
+.danger {
+  background: var(--danger);
+  color: #fff;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  background: #ede8fa;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 7px;
+}
+
+footer {
+  text-align: center;
+  padding: 2rem 0 1.7rem 0;
+  color: #8886a3;
+  font-size: 1.04rem;
+}
+
+/* Responsive Design */
+@media (max-width: 900px) {
+  main {
+    max-width: 98vw;
+    padding: 1.4rem 0.6rem;
+  }
+}
+
+@media (max-width: 600px) {
+  header h1 { font-size: 2rem; }
+  main { padding: 1.1rem 0.1rem; }
+  .word-title { font-size: 1.4rem; }
+}
+
+/* Animation for buttons */
+@keyframes button-glow {
+  0%, 100% { box-shadow: 0 0 0 0 var(--primary); }
+  50% { box-shadow: 0 0 14px 6px var(--accent); }
+}
+
+button.special {
+  animation: button-glow 2.2s infinite;
+  background: var(--gradient);
+  color: var(--text-light);
+}
+
+/* Tooltip */
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 180px;
+  background: #22223b;
+  color: #fff;
+  text-align: center;
+  border-radius: 8px;
+  padding: 0.7em 1em;
+  position: absolute;
+  z-index: 1;
+  bottom: 115%; left: 50%; transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Fancy accent underline for headings */
+h2, .section-title {
+  display: inline-block;
+  position: relative;
+  color: var(--primary);
+  font-weight: 700;
+  padding-bottom: 0.18em;
+}
+
+h2:after, .section-title:after {
+  content: '';
+  display: block;
+  width: 60%;
+  margin: 0 auto;
+  height: 3px;
+  background: var(--accent);
+  border-radius: 2px;
+  position: absolute;
+  left: 20%;
+  bottom: -6px;
+}
